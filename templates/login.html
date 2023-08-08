@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enviar Planilhas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('{{ url_for('static', filename='image.png') }}'); /* Substitua pelo caminho da sua imagem */
+            background-size: cover;
+            background-position: center;
+            font-family: Montserrat, sans-serif;
+            color: white;
+        }
+        .container {
+            text-align: left;
+            max-width: 600px; /* Defina a largura máxima desejada */
+            margin: 0 0 0 20px ; /* Ajusta a margem para alinhar à esquerda */
+            padding: 100px;
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente para legibilidade */
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.8); /* Campo de entrada semi-transparente */
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <h1>Faça seu login</h1>
+        <form method="POST" action=" {{ url_for('autenticar') }} ">
+            <input type="hidden" name="proxima" value="{{ proxima }}">
+            <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario" required></p>
+            <p><label>Senha:</label> <input class="form-control" type="password" name="senha" required></p>
+            <p><button class="btn btn-primary" type="submit">Entrar</button></p>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enviar Planilha</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <style>
+        body {
+            font-family: Montserrat, sans-serif;
+            background-image: url('{{ url_for('static', filename='image.png') }}');
+            background-size: cover; /* Ajuste o tamanho da imagem para "contain" */
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            text-align: left;
+            width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 5);
+
+        }
+        h1 {
+            text-align: center;
+            font-family: Montserrat, sans-serif;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Montserrat, sans-serif;
+
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Enviar Planilha</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="excel_file" accept=".xlsx">
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página Inicial</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='image.png') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Montserrat, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 20px;
+        }
+        .highlight-text {
+            color: #f8f9fa; /* Cor do texto destacado */
+            padding: 2px 5px; /* Espaçamento interno */
+            font-weight: bold; /* Texto em negrito */
+            background-color: #343a40; /* Cor de fundo */
+            border-radius: 5px; /* Borda arredondada */
+            display: inline; /* Manter elementos em linha */
+        }
+        .btn-wrapper {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-light ">Página Inicial</h1>
+        <p class="text-light highlight-text">Bem-vindo(a) ao sistema! Você pode começar enviando uma <span class="highlight-background">planilha Excel</span>.</p>
+        <div class="btn-wrapper">
+            <a href="{{ url_for('enviar') }}" class="btn btn-primary">Enviar Planilha</a>
+        </div>
+    </div>
+</body>
+</html>
