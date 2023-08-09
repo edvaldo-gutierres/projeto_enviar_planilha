@@ -3,7 +3,6 @@ import os
 import openpyxl
 import sqlite3
 
-
 class Usuario:
     def __init__(self, nome, nickname, senha):
         self.nome=nome
@@ -11,7 +10,7 @@ class Usuario:
         self.senha=senha
 
 usuario1 = Usuario('edvaldo', 'ed', '12345')
-usuario2 = Usuario('carlos','carlos', 'vital123')
+usuario2 = Usuario('carlos','cgrossklaus@lwart.com.br', 'vital123')
 usuario3 = Usuario('gilson', 'gil', 'vital321')
 
 usuarios = {usuario1.nickname : usuario1,
@@ -90,37 +89,58 @@ def enviar():
 def result():
     return render_template('result.html')
 
+@app.route('/error')
+def error():
+    return render_template('error.html')
+
+
+# Função que verifica colunas esperadas
+def verifica_colunas(colunas_planilha, colunas_esperadas):
+    return set(colunas_esperadas).issubset(set(colunas_planilha))
+
+
 # Rota para receber o arquivo e processá-lo
 @app.route('/upload', methods=['POST'])
 def upload_file():
     excel_file = request.files['excel_file']
 
-    if excel_file.filename != '':
-        file_path = os.path.join('uploads', excel_file.filename)
-        excel_file.save(file_path)
+    try:
+        if excel_file.filename != '':
+            file_path = os.path.join('uploads', excel_file.filename)
+            excel_file.save(file_path)
 
-        workbook = openpyxl.load_workbook(file_path)
-        sheet = workbook.active
+            workbook = openpyxl.load_workbook(file_path)
+            sheet = workbook.active
 
-        data = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):
-            nome_empresa, ano, faturamento = row
-            data.append((nome_empresa, ano, faturamento))
+            colunas_esperadas = ['nome_empresa', 'ano', 'faturamento']
+            colunas_planilha = [coluna.value for coluna in sheet[1]]
 
-        db = get_db()
-        cursor = db.cursor()
-        for row in data:
-            nome_empresa, ano, faturamento = row
-            cursor.execute("INSERT INTO planilha (nome_empresa, ano, faturamento) VALUES (?, ?, ?)",
-                           (nome_empresa, ano, faturamento))
-        db.commit()
+            if verifica_colunas(colunas_planilha, colunas_esperadas):
+                data = []
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    nome_empresa, ano, faturamento = row
+                    data.append((nome_empresa, ano, faturamento))
 
-        os.remove(file_path)
+                db = get_db()
+                cursor = db.cursor()
+                for row in data:
+                    nome_empresa, ano, faturamento = row
+                    cursor.execute("INSERT INTO planilha (nome_empresa, ano, faturamento) VALUES (?, ?, ?)",
+                                   (nome_empresa, ano, faturamento))
+                db.commit()
 
-        return redirect(url_for('result'))
-    else:
-        return "Nenhum arquivo enviado."
+                os.remove(file_path)
 
+                return redirect(url_for('result'))
+            else:
+                return render_template('index.html', message='A planilha não possui as colunas esperadas.')
+
+        else:
+            return render_template('index.html', message='Nenhum arquivo enviado.')
+
+    except Exception as e:
+        print(f"Error processing Excel file: {e}")
+        return redirect(url_for('error'))
 
 if __name__ == '__main__':
     app.run(debug=True)
