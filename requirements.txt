@@ -6,4 +6,3 @@ colorama==0.4.6
 itsdangerous==2.1.2
 Jinja2==3.1.2
 Werkzeug==2.2.2
-wincerstore==0.2
